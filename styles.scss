@@ -1,0 +1,11 @@
+@import "~bootstrap/scss/bootstrap";
+
+body {
+    // https://codepen.io/billyysea/pen/nLroLY
+    background: linear-gradient(to bottom, #9be2fe 0%,#67d1fb 100%);
+    min-height: 100vh;
+}
+
+.accordion-header button {
+    font-weight: bold;
+}
