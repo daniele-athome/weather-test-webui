@@ -14,7 +14,7 @@
 
     <header class="container text-md-start my-2 mt-3">
         <div class="row align-items-center">
-            <h1 class="col-md-7">Meteo campo di volo "Nino Petrini" (Gallicano)</h1>
+            <h1 class="col-md-7">%VITE_LOCATION_TITLE%</h1>
             <div class="w-100 d-md-none d-block"></div>
 
             <div class="form-check form-switch ps-2 align-self-center col-1 offset-md-3 me-4 me-md-1">
@@ -84,8 +84,7 @@
                                             >&nbsp;°<span class="celsius">C</span>
                                             <br />
                                             <small id="condition-msg">
-                                                <!-- TODO -->
-                                                <i class="fa-solid fa-circle-check"></i> Condizioni ideali
+                                                <i class="fa-solid fa-circle-question"></i> Condizioni sconosciute
                                             </small>
                                         </p>
                                     </div>
@@ -106,9 +105,12 @@
                         <div class="card p-1 initial">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex">
-                                    <strong class="flex-grow-1">Visibilità</strong>
+                                    <strong class="flex-grow-1">Visibilità
+                                        <i class="fa-solid fa-circle-info align-self-center" data-bs-toggle="tooltip"
+                                           title="Dal METAR di %VITE_METAR_STATION_NAME% (%VITE_METAR_STATION_CODE%)"></i>
+                                    </strong>
                                     <span id="visibility">--</span>&nbsp;km
-                                    <i class="fa-solid fa-eye-slash align-self-center"></i>
+                                    <i class="fa-solid fa-eye-slash align-self-center emblem"></i>
                                 </li>
 
                                 <li class="list-group-item d-flex">
@@ -117,7 +119,7 @@
                                         id="dew-point"
                                         class="temps">--</span
                                 >&nbsp;°<span class="celsius">C</span>
-                                    <i class="fa-solid fa-droplet align-self-center"></i>
+                                    <i class="fa-solid fa-droplet align-self-center emblem"></i>
                                 </li>
 
                                 <li class="list-group-item d-flex">
@@ -126,26 +128,29 @@
                                     <span id="wind-unit">m/s</span><i
                                         class="fa-solid fa-location-arrow align-self-center mx-1"></i><span
                                         id="wind-direction">--</span>°
-                                    <i class="fa-solid fa-wind align-self-center"></i>
+                                    <i class="fa-solid fa-wind align-self-center emblem"></i>
                                 </li>
 
                                 <li class="list-group-item d-flex">
                                     <strong class="flex-grow-1">Umidità</strong>
                                     <span id="humidity">--</span>%
-                                    <i class="fa-solid fa-water align-self-center"></i>
+                                    <i class="fa-solid fa-water align-self-center emblem"></i>
                                 </li>
 
                                 <li class="list-group-item d-flex">
                                     <strong class="flex-grow-1">Pressione</strong>
                                     <span id="presure">--</span>&nbsp;
                                     <span id="pressure-unit">hPa</span>
-                                    <i class="fa-solid fa-gauge-high align-self-center"></i>
+                                    <i class="fa-solid fa-gauge-high align-self-center emblem"></i>
                                 </li>
 
                                 <li class="list-group-item d-flex">
-                                    <strong class="flex-grow-1">Copertura</strong>
+                                    <strong class="flex-grow-1">Copertura
+                                        <i class="fa-solid fa-circle-info align-self-center" data-bs-toggle="tooltip"
+                                           title="Dal METAR di %VITE_METAR_STATION_NAME% (%VITE_METAR_STATION_CODE%)"></i>
+                                    </strong>
                                     <span id="clouds">--</span>%
-                                    <i class="fa-solid fa-cloud align-self-center"></i>
+                                    <i class="fa-solid fa-cloud align-self-center emblem"></i>
                                 </li>
                             </ul>
                         </div>

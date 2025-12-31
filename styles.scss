@@ -152,6 +152,7 @@ footer i {
 .form-check-input {
     background-color: #f0f7f8;
     border-color: #0a95c0;
+    cursor: pointer;
 }
 
 /* CONTAINER CONTENT */
@@ -204,7 +205,7 @@ footer i {
     color: rgba(0, 82, 37, 0.798);
 }
 
-.temp-details li i:last-child {
+.temp-details i.emblem {
     padding-left: 10px;
 }
 
