@@ -10,72 +10,184 @@
 
 <body>
 
-<div class="container my-4">
-    <div class="p-4 bg-body-tertiary rounded-3">
+<div class="container">
 
-        <h1 class="text-body-emphasis text-center">
-            Weather station test
-        </h1>
-        <p class="text-muted text-center">
-            Live data from the test weather station.
-        </p>
+    <header class="container text-md-start my-2 mt-3">
+        <div class="row align-items-center">
+            <h1 class="col-md-7">Meteo campo di volo "Nino Petrini" (Gallicano)</h1>
+            <div class="w-100 d-md-none d-block"></div>
 
-        <div class="accordion" id="mainAccordion">
-
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#accordionCurrent" aria-expanded="true" aria-controls="accordionCurrent">
-                        Current weather
-                    </button>
-                </h2>
-                <div id="accordionCurrent" class="accordion-collapse collapse show" data-bs-parent="#mainAccordion">
-                    <div class="accordion-body">
-
-                        <div class="row g-3 justify-content-center">
-                            <div class="col-12">
-                                Last update: <strong><span id="dataTimestamp">XX</span></strong><br/>
-                                Temperature: <strong><span id="dataTemperature">XX</span> °C</strong><br/>
-                                Humidity: <strong><span id="dataHumidity">XX</span>%</strong><br/>
-                                Dew point: <strong><span id="dataDewPoint">XX</span> °C</strong><br/>
-                                Pressure: <strong><span id="dataPressure">XX</span> hPa</strong><br/>
-                                Wind speed: <strong><span id="dataWindSpeed">XX</span> m/s</strong><br/>
-                                Wind direction: <strong><span id="dataWindDirection">XX</span>°</strong><br/>
-                            </div>
-                        </div>
-
-                        <hr/>
-
-                        <div class="row g-3 justify-content-center">
-                            <div class="col-12">
-                                <pre><code id="currentWeatherData"></code></pre>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
+            <div class="form-check form-switch ps-2 align-self-center col-1 offset-md-3 me-4 me-md-1">
+                <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="flexSwitchCheckChecked"
+                        role="switch" />
             </div>
-
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#accordionHistory" aria-expanded="true" aria-controls="accordionHistory">
-                        Historical data
-                    </button>
-                </h2>
-                <div id="accordionHistory" class="accordion-collapse collapse" data-bs-parent="#mainAccordion">
-                    <div class="accordion-body">
-
-                        Not implemented yet.
-
-                    </div>
-                </div>
-            </div>
-
         </div>
+        <div class="row align-items-center">
+            <div class="col">
+                <h3>
+                    <!-- TODO split into 2 columns -->
+                    Ultimo aggiornamento: <span id="today"></span>
+                    <!-- TODO refresh button -->
+                </h3>
+            </div>
+        </div>
+    </header>
 
+    <div class="row d-flex">
+        <div class="local-webcam col p-0 mx-lg-4 mt-2">
+            <img class="card-full-img w-100"
+                 src="/images/webcam.jpg"
+                 alt="Webcam">
+        </div>
     </div>
+
+    <div class="row d-flex">
+        <div class="local-overview col mx-lg-4 mt-4">
+            <div class="container flex-md-row flex-column my-4">
+                <div class="row">
+                    <section class="temp-overview col-lg-5">
+                        <div class="current-weather card">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <h1 class="flex-grow-1">
+                                        <span id="temp-now"></span>&nbsp;°<span class="celsius">C</span>
+                                    </h1>
+
+                                    <!-- TODO h3 class="text-end pt-2">
+                                        <small>High</small>
+                                        <span
+                                                class="temps"
+                                                id="high-temp"></span
+                                        >°<span class="celsius">C</span>
+                                        <br />
+
+                                        <small>Low </small>
+                                        <span
+                                                class="temps"
+                                                id="low-temp"
+                                        >30</span
+                                        >°<span class="celsius">C</span>
+                                    </h3-->
+                                </div>
+                                <br /><br />
+                                <div class="d-flex">
+                                    <div class="flex-grow-1">
+                                        <p>
+                                            <span id="description-temp">Sereno</span><br />
+                                            Temperatura percepita
+                                            <span
+                                                    class="temps"
+                                                    id="feels-like">0</span
+                                            >&nbsp;°<span class="celsius">C</span>
+                                            <br />
+                                            <small id="condition-msg">
+                                                <i class="fa-solid fa-circle-check"></i> Condizioni ideali
+                                            </small>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <img
+                                                src="/images/loading.svg"
+                                                width="85"
+                                                class="weather-icon default-main-icon"
+                                                id="condition-icon"
+                                                alt="Loading icon" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="w-100 d-lg-none d-block"></div>
+                    <section class="temp-details col-lg-4 col-md-5 mt-3 mt-md-2 mt-lg-0">
+                        <div class="card p-1 initial">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex">
+                                    <strong class="flex-grow-1">Visibilità</strong>
+                                    <span id="visibility">0</span>&nbsp;km
+                                    <i class="fa-solid fa-eye-slash align-self-center"></i>
+                                </li>
+
+                                <li class="list-group-item d-flex">
+                                    <strong class="flex-grow-1">Punto di rugiada</strong
+                                    ><span
+                                        id="dew-point"
+                                        class="temps"></span
+                                >&nbsp;°<span class="celsius">C</span>
+                                    <i class="fa-solid fa-droplet align-self-center"></i>
+                                </li>
+
+                                <li class="list-group-item d-flex">
+                                    <strong class="flex-grow-1">Vento </strong>
+                                    <span id="wind-speed">0</span>&nbsp;
+                                    <span id="wind-unit">m/s</span><i
+                                        class="fa-solid fa-location-arrow align-self-center mx-1"></i><span
+                                        id="wind-direction"></span>°
+                                    <i class="fa-solid fa-wind align-self-center"></i>
+                                </li>
+
+                                <li class="list-group-item d-flex">
+                                    <strong class="flex-grow-1">Umidità</strong>
+                                    <span id="humidity">0</span>%
+                                    <i class="fa-solid fa-water align-self-center"></i>
+                                </li>
+
+                                <li class="list-group-item d-flex">
+                                    <strong class="flex-grow-1">Pressione</strong>
+                                    <span id="presure">0</span>&nbsp;
+                                    <span id="pressure-unit">hPa</span>
+                                    <i class="fa-solid fa-gauge-high align-self-center"></i>
+                                </li>
+
+                                <li class="list-group-item d-flex">
+                                    <strong class="flex-grow-1">Copertura</strong>
+                                    <span id="clouds">0</span>%
+                                    <i class="fa-solid fa-cloud align-self-center"></i>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                    <div class="w-100 d-md-none d-block"></div>
+                    <section class="sun-time col-md mt-3 mt-md-2 mt-lg-0">
+                        <div class="card">
+                            <img
+                                    src="/images/day-landscape.png"
+                                    class="card-img w-100"
+                                    id="scenery"
+                                    alt="Landscape scenery" />
+                            <div class="card-img-overlay text-center">
+                                <i class="fa-solid fa-sun"></i>
+                                <h3>Alba</h3>
+                                <h2 id="sunrise-time"></h2>
+                                <br />
+                                <i class="fa-solid fa-moon"></i>
+                                <h3>Tramonto</h3>
+                                <h2 id="sunset-time"></h2>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center my-3">
+        <i class="fa-solid fa-code"></i>
+        Designed by
+        <strong
+        ><a
+                href="https://github.com/aniqatc/weather"
+                target="_blank"
+                rel="noreferrer"
+                id="credits"
+        >Aniqa</a
+        >
+        </strong>
+    </footer>
+
+
 </div>
 
 </body>
