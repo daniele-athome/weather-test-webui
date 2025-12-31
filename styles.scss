@@ -21,7 +21,6 @@ body {
     --main-bg: #e7edfa;
     --main-text: #000;
     --container-bg: #fcfcfc;
-    --global-hover: #e7edfa;
     --forecast-text: initial;
     --icon-color: #00526beb;
     --icon-shadow: none;
@@ -36,7 +35,6 @@ body {
     --main-text: #f6f7fa;
     --text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
     --container-bg: #2e3540;
-    --global-hover: rgba(149, 205, 236, 0.22);
     --forecast-text: #bdbdbd;
     --icon-color: rgb(225, 255, 239);
     --icon-shadow: 2px 2px 5px rgba(0, 0, 0, 0.35);
@@ -158,8 +156,7 @@ footer i {
 
 /* CONTAINER CONTENT */
 .local-overview,
-.local-webcam,
-.global-overview {
+.local-webcam {
     box-shadow: 2px 2px 6px 1px rgba(0, 0, 0, 0.15), -2px -2px 6px 1px rgba(0, 0, 0, 0.15);
     border-radius: 20px;
     background: var(--container-bg);
@@ -170,16 +167,11 @@ footer i {
     drop-shadow(-1px -1px 2px rgba(77, 77, 77, 0.3));
 }
 
-.forecast-icon,
-.global-icon {
-    transform: scale(1.6);
-}
-
 /* LOCAL WEATHER CONTAINER CONTENT */
 .daily,
 .card,
 .form-check-input {
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .current-weather {
@@ -226,74 +218,7 @@ footer i {
     text-shadow: var(--icon-shadow);
 }
 
-/* DAILY FORECAST STYLES */
-.full-forecast {
-    overflow-x: scroll;
-    overflow-y: visible;
-    padding: 10px 10px 15px 10px;
-    width: 100%;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-.full-forecast::-webkit-scrollbar {
-    display: none;
-}
-
-.daily {
-    border-radius: 10px;
-    text-align: center;
-    background: rgba(149, 205, 236, 0.22);
-    padding: 8px 20px;
-}
-
-.daily p:first-child {
-    font-weight: bold;
-    text-transform: lowercase;
-}
-
-.daily-low {
-    font-size: 14px;
-    color: var(--forecast-text);
-}
-
-.daily:hover {
-    background: rgba(73, 177, 234, 0.33);
-    transform: scale(1.05);
-}
-
-.daily:hover .weather-icon {
-    filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.4));
-    transform: scale(1.9);
-}
-
-/* GLOBAL FORECAST STYLES */
-.global-overview h2 {
-    font-size: 22px;
-}
-
-.global-icon {
-    object-fit: contain;
-}
-
-.global-item:hover {
-    background: var(--global-hover);
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.global-item:hover .global-icon {
-    transform: scale(1.8);
-    filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.4));
-}
-
-.global-item {
-    min-height: 95px;
-    padding: 14px 2px;
-}
-
-#description-temp,
-.global-descriptions {
+#description-temp {
     text-transform: capitalize;
 }
 
@@ -319,20 +244,4 @@ footer i {
 .dark .list-group-item {
     color: rgb(246, 255, 250);
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.35);
-}
-
-/* Custom scrollbar styling for forecast section */
-@media only screen and (max-width: 768px) {
-    .full-forecast {
-        -ms-overflow-style: unset;
-        scrollbar-width: unset;
-    }
-
-    .full-forecast::-webkit-scrollbar,
-    .full-forecast::-webkit-scrollbar-thumb {
-        background-color: rgba(149, 205, 236, 0.1);
-        border-radius: 10px;
-        height: 10px;
-        display: unset;
-    }
 }
