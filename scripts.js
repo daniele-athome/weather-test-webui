@@ -3,6 +3,7 @@ import './styles.scss';
 import * as bootstrap from 'bootstrap'
 import $ from "jquery";
 import * as SunCalc from 'suncalc';
+import Feels from 'feels';
 
 const themeManager = {
     body: document.querySelector('body'),
@@ -128,16 +129,26 @@ const weatherManager = {
                 second: '2-digit',
                 timeZoneName: 'longOffset',
             });
-            document.querySelector('#temp-now').innerHTML = latest['temperature'];
-            document.querySelector('#humidity').innerHTML = latest['humidity'];
-            document.querySelector('#dew-point').innerHTML = latest['dew_point'];
-            document.querySelector('#presure').innerHTML = latest['pressure'];
-            document.querySelector('#wind-speed').innerHTML = latest['wind_speed'];
+            document.querySelector('#temp-now').innerHTML = latest['temperature'].toFixed(1);
+            document.querySelector('#humidity').innerHTML = latest['humidity'].toFixed(0);
+            document.querySelector('#dew-point').innerHTML = latest['dew_point'].toFixed(1);
+            document.querySelector('#presure').innerHTML = latest['pressure'].toFixed(0);
+            document.querySelector('#wind-speed').innerHTML = latest['wind_speed'].toFixed(0);
             document.querySelector('#wind-direction').innerHTML = latest['wind_direction'];
+
+            const config = {
+                temp: latest['temperature'],
+                humidity: latest['humidity'],
+                speed: latest['wind_speed'],
+                units: {
+                    temp: 'c',
+                    speed: 'mps'
+                }
+            };
+            document.querySelector('#feels-like').innerHTML = new Feels(config).like().toFixed(1);
 
             // TODO dummy stuff
             document.querySelector('#description-temp').innerHTML = 'Sereno';
-            document.querySelector('#feels-like').innerHTML = '32';
         });
     },
 
