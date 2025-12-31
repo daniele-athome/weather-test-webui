@@ -29,7 +29,7 @@
             <div class="col">
                 <h3>
                     <!-- TODO split into 2 columns -->
-                    Ultimo aggiornamento: <span id="today"></span>
+                    Ultimo aggiornamento: <span id="today">&hellip;</span>
                     <!-- TODO refresh button -->
                 </h3>
             </div>
@@ -53,7 +53,7 @@
                             <div class="card-body">
                                 <div class="d-flex">
                                     <h1 class="flex-grow-1">
-                                        <span id="temp-now"></span>&nbsp;°<span class="celsius">C</span>
+                                        <span id="temp-now">--</span>&nbsp;°<span class="celsius">C</span>
                                     </h1>
 
                                     <!-- TODO h3 class="text-end pt-2">
@@ -76,14 +76,15 @@
                                 <div class="d-flex">
                                     <div class="flex-grow-1">
                                         <p>
-                                            <span id="description-temp">Sereno</span><br />
+                                            <span id="description-temp">&hellip;</span><br />
                                             Temperatura percepita
                                             <span
                                                     class="temps"
-                                                    id="feels-like">0</span
+                                                    id="feels-like">--</span
                                             >&nbsp;°<span class="celsius">C</span>
                                             <br />
                                             <small id="condition-msg">
+                                                <!-- TODO -->
                                                 <i class="fa-solid fa-circle-check"></i> Condizioni ideali
                                             </small>
                                         </p>
@@ -106,7 +107,7 @@
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex">
                                     <strong class="flex-grow-1">Visibilità</strong>
-                                    <span id="visibility">0</span>&nbsp;km
+                                    <span id="visibility">--</span>&nbsp;km
                                     <i class="fa-solid fa-eye-slash align-self-center"></i>
                                 </li>
 
@@ -114,36 +115,36 @@
                                     <strong class="flex-grow-1">Punto di rugiada</strong
                                     ><span
                                         id="dew-point"
-                                        class="temps"></span
+                                        class="temps">--</span
                                 >&nbsp;°<span class="celsius">C</span>
                                     <i class="fa-solid fa-droplet align-self-center"></i>
                                 </li>
 
                                 <li class="list-group-item d-flex">
                                     <strong class="flex-grow-1">Vento </strong>
-                                    <span id="wind-speed">0</span>&nbsp;
+                                    <span id="wind-speed">--</span>&nbsp;
                                     <span id="wind-unit">m/s</span><i
                                         class="fa-solid fa-location-arrow align-self-center mx-1"></i><span
-                                        id="wind-direction"></span>°
+                                        id="wind-direction">--</span>°
                                     <i class="fa-solid fa-wind align-self-center"></i>
                                 </li>
 
                                 <li class="list-group-item d-flex">
                                     <strong class="flex-grow-1">Umidità</strong>
-                                    <span id="humidity">0</span>%
+                                    <span id="humidity">--</span>%
                                     <i class="fa-solid fa-water align-self-center"></i>
                                 </li>
 
                                 <li class="list-group-item d-flex">
                                     <strong class="flex-grow-1">Pressione</strong>
-                                    <span id="presure">0</span>&nbsp;
+                                    <span id="presure">--</span>&nbsp;
                                     <span id="pressure-unit">hPa</span>
                                     <i class="fa-solid fa-gauge-high align-self-center"></i>
                                 </li>
 
                                 <li class="list-group-item d-flex">
                                     <strong class="flex-grow-1">Copertura</strong>
-                                    <span id="clouds">0</span>%
+                                    <span id="clouds">--</span>%
                                     <i class="fa-solid fa-cloud align-self-center"></i>
                                 </li>
                             </ul>
@@ -160,11 +161,11 @@
                             <div class="card-img-overlay text-center">
                                 <i class="fa-solid fa-sun"></i>
                                 <h3>Alba</h3>
-                                <h2 id="sunrise-time"></h2>
+                                <h2 id="sunrise-time">--:--</h2>
                                 <br />
                                 <i class="fa-solid fa-moon"></i>
                                 <h3>Tramonto</h3>
-                                <h2 id="sunset-time"></h2>
+                                <h2 id="sunset-time">--:--</h2>
                             </div>
                         </div>
                     </section>

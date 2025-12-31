@@ -87,5 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         $('#condition-icon').attr('src', '/images/icons/clear-day.svg');
         $('#sunrise-time').text('07:04');
         $('#sunset-time').text('17:12');
+        $('#description-temp').text('Sereno');
+        $('#feels-like').text('32');
     });
 });
