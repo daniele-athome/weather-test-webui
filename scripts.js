@@ -5,6 +5,15 @@ import $ from "jquery";
 import * as SunCalc from 'suncalc';
 import Feels from 'feels';
 
+import dayLandscapeImage from './images/day-landscape.png';
+import nightLandscapeImage from './images/night-landscape.png';
+
+const weatherIcons = import.meta.glob('./images/weather-icons/*.svg', { eager: true });
+const getWeatherIcon = (name) => {
+    console.log(weatherIcons);
+    return weatherIcons[`./images/weather-icons/${name}.svg`]?.default;
+}
+
 const themeManager = {
     body: document.querySelector('body'),
     themeToggle: document.querySelector('#flexSwitchCheckChecked'),
@@ -61,10 +70,10 @@ const sunTimesManager = {
 
     changeSceneryImage: function () {
         if (this.isNight()) {
-            this.sceneryImage.src = '/images/night-landscape.png';
+            this.sceneryImage.src = nightLandscapeImage;
             this.sceneryImage.alt = 'Night landscape';
         } else {
-            this.sceneryImage.src = '/images/day-landscape.png';
+            this.sceneryImage.src = dayLandscapeImage;
             this.sceneryImage.alt = 'Day landscape';
         }
     },
@@ -164,7 +173,7 @@ const weatherManager = {
                 console.log(cloudIcon);
                 if (cloudIcon !== undefined) {
                     const realCloudIcon = sunTimesManager.isNight() ? cloudIcon.night : cloudIcon.day;
-                    document.querySelector('#condition-icon').src = `/images/icons/${realCloudIcon}.svg`;
+                    document.querySelector('#condition-icon').src = getWeatherIcon(realCloudIcon);
                 }
 
                 if (data.cover === 'CAVOK') {
