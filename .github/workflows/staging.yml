@@ -1,0 +1,58 @@
+name: staging
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Create environment configuration
+        run:
+          cat << EOF >.env.staging
+          VITE_WEATHER_API_URL=$VITE_WEATHER_API_URL
+          VITE_LOCATION_TITLE="$VITE_LOCATION_TITLE"
+          VITE_LOCATION_LATITUDE=$VITE_LOCATION_LATITUDE
+          VITE_LOCATION_LONGITUDE=$VITE_LOCATION_LONGITUDE
+          VITE_LOCATION_HEIGHT=$VITE_LOCATION_HEIGHT
+          VITE_LOCATION_TIMEZONE="$VITE_LOCATION_TIMEZONE"
+          VITE_METAR_STATION_NAME="$VITE_METAR_STATION_NAME"
+          VITE_METAR_STATION_CODE=$VITE_METAR_STATION_CODE
+          EOF
+
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Setup build
+        run: npm ci
+
+      - name: Build
+        run: npm run build -- -m staging
+
+      - name: Upload build as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist/
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
