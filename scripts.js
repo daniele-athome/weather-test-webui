@@ -163,7 +163,10 @@ const weatherManager = {
 
     requestMetar: function () {
         return $.getJSON(this.metarUrl, (data) => {
-            if (data.hasOwnProperty('cover')) {
+            if (data === undefined || data === null) {
+                document.querySelector('#condition-icon').style.display = 'none';
+            }
+            else if (data.hasOwnProperty('cover')) {
                 const cloudCoverage = this.cloudCover[data.cover];
                 if (cloudCoverage !== undefined) {
                     document.querySelector('#clouds').innerHTML = cloudCoverage.toString();
