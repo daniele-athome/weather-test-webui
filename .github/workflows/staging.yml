@@ -26,9 +26,6 @@ jobs:
           VITE_METAR_STATION_CODE=${{ vars.VITE_METAR_STATION_CODE }}
           EOF
 
-      - name: Debug environment
-        run: cat .env.staging
-
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
