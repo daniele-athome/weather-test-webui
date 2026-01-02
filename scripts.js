@@ -9,6 +9,8 @@ import * as Highcharts from 'highcharts';
 import * as HighchartsAdaptive from 'highcharts/themes/adaptive';
 // noinspection ES6UnusedImports
 import * as HighchartsBrokenAxis from 'highcharts/modules/broken-axis';
+// noinspection ES6UnusedImports
+import * as HighchartsStock from 'highcharts/modules/stock';
 
 import dayLandscapeImage from './images/day-landscape.png';
 import nightLandscapeImage from './images/night-landscape.png';
@@ -252,17 +254,19 @@ const weatherManager = {
                 title: false,
             },
             plotOptions: {
-                spline: {
+                series: {
                     marker: {
                         enabled: false,
                         radius: 4,
                         //lineColor: '#666666',
                         lineWidth: 1
                     },
+                    dataGrouping: {
+                        enabled: true,
+                        groupPixelWidth: 5,
+                    },
                     gapSize: 100,
                     gapUnit: 'relative',
-                },
-                series: {
                     label: {
                         connectorAllowed: false
                     },
