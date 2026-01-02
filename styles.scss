@@ -237,6 +237,16 @@ footer i {
     border-radius: 20px;
 }
 
+/* Charts */
+.card-chart {
+    --bs-card-spacer-y: 0;
+    --bs-card-spacer-x: 0;
+}
+
+.chart-container {
+    border-radius: var(--bs-card-border-radius);
+}
+
 /* Additional DARK STYLES */
 .dark .card:not(.initial),
 .list-group-item {
