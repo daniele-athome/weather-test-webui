@@ -230,6 +230,9 @@ const weatherManager = {
                     type: 'x'
                 },
             },
+            time: {
+                timezone: import.meta.env.VITE_LOCATION_TIMEZONE,
+            },
             legend: {
                 enabled: false,
             },
