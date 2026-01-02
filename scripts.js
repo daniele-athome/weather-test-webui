@@ -549,6 +549,24 @@ const weatherManager = {
     },
 };
 
+const webcamManager = {
+    localImage: document.querySelector('#local-webcam-image'),
+    fullscreenImage: document.querySelector('#fullscreen-webcam-image'),
+    overlay: document.querySelector('#webcam-overlay'),
+
+    initialize: function () {
+        this.localImage.addEventListener('click', async () => {
+            this.fullscreenImage.src = this.localImage.src;
+            this.overlay.classList.add('active');
+            await this.overlay.requestFullscreen();
+        });
+        this.fullscreenImage.addEventListener('click', async () => {
+            this.overlay.classList.remove('active');
+            await document.exitFullscreen();
+        });
+    },
+};
+
 const localDateTime = () => {
     // TODO we should location timezone instead of the browser one
     return new Date();
@@ -560,6 +578,7 @@ document.addEventListener("DOMContentLoaded", () => {
     themeManager.initialize();
     sunTimesManager.initialize();
     weatherManager.initialize();
+    webcamManager.initialize();
 
     // tooltips
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
