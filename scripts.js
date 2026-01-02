@@ -4,6 +4,9 @@ import * as bootstrap from 'bootstrap'
 import $ from "jquery";
 import * as SunCalc from 'suncalc';
 import Feels from 'feels';
+import * as Highcharts from 'highcharts';
+// noinspection ES6UnusedImports
+import * as HighchartsAdaptive from 'highcharts/themes/adaptive';
 
 import dayLandscapeImage from './images/day-landscape.png';
 import nightLandscapeImage from './images/night-landscape.png';
@@ -28,6 +31,7 @@ const themeManager = {
 
     toggleTheme: function () {
         this.body.classList.toggle('dark');
+        this.body.classList.toggle('highcharts-dark');
         localStorage.setItem('theme', this.body.classList.contains('dark') ? 'dark' : 'light');
     },
 
@@ -91,7 +95,7 @@ const sunTimesManager = {
 };
 
 const weatherManager = {
-    weatherUrl: import.meta.env.VITE_WEATHER_API_URL + "/latest?limit=1",
+    weatherUrl: import.meta.env.VITE_WEATHER_API_URL + "/latest?limit=50",
     metarUrl: import.meta.env.VITE_WEATHER_API_URL + "/metar",
     cloudCover: {
         'CAVOK': 0,
@@ -126,6 +130,7 @@ const weatherManager = {
 
     requestWeather: function () {
         return $.getJSON(this.weatherUrl, (data) => {
+            // item are in reversed temporal order, so the first one is the more recent
             let latest = data[0];
             let timestamp = new Date(latest['timestamp']);
 
@@ -158,6 +163,8 @@ const weatherManager = {
                 }
             };
             document.querySelector('#feels-like').innerHTML = new Feels(config).like().toFixed(1);
+
+            this.createHistoricalCharts(data);
 
             // TODO dummy stuff
             document.querySelector('#description-temp').innerHTML = 'Sereno';
@@ -193,11 +200,140 @@ const weatherManager = {
         });
     },
 
+    createHistoricalCharts: function(data) {
+        const randomOffset = () => {
+            return Math.round((Math.random() * 10 - 5) * 10) / 10
+        };
+
+        let seriesTemp = [];
+        let seriesDew = [];
+        let seriesHum = [];
+        for (let item of data) {
+            let offset = randomOffset();
+            seriesTemp.push([item['timestamp'], item['temperature'] + offset]);
+            seriesDew.push([item['timestamp'], item['dew_point'] + offset]);
+            seriesHum.push([item['timestamp'], item['humidity'] + offset]);
+        }
+        seriesTemp.sort((a, b) => a[0].localeCompare(b[0]));
+        seriesDew.sort((a, b) => a[0].localeCompare(b[0]));
+        seriesHum.sort((a, b) => a[0].localeCompare(b[0]));
+        console.log(seriesTemp);
+        console.log(seriesDew);
+        console.log(seriesHum);
+
+        const chartOptions = {
+            chart: {
+                type: 'line',
+                height: 250,
+                zooming: {
+                    type: 'x'
+                },
+            },
+            legend: {
+                enabled: false,
+            },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: {
+                    // TODO
+                    //month: '%e. %b',
+                    //year: '%b'
+                },
+                gridLineWidth: 1,
+                showEmpty: true,
+                minPadding: 0,
+                maxPadding: 0,
+                // 1 minute ticks
+                tickInterval: 60*1000,
+                title: false,
+            },
+            plotOptions: {
+                series: {
+                    label: {
+                        connectorAllowed: false
+                    },
+                    //pointStart: 2010
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            tooltip: {
+                enabled: true,
+                shared: true,
+                valueSuffix: ' °C',
+                valueDecimals: 1,
+            },
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                }]
+            }
+        };
+
+        Highcharts.chart('chart-temperature', {
+            ...chartOptions,
+            title: {
+                text: 'Temperatura (°C)',
+            },
+            yAxis: {
+                gridLineWidth: 1,
+                showEmpty: true,
+                tickInterval: 5,
+                minPadding: 0,
+                maxPadding: 0,
+                /*labels: {
+                    format: '{value} °C'
+                },*/
+                title: false,
+            },
+            series: [{
+                name: 'Temperatura',
+                data: seriesTemp,
+                color: '#2d87ff',
+            }, {
+                name: 'Punto di rugiada',
+                data: seriesDew,
+                color: '#f53e3e',
+            }],
+        });
+
+        Highcharts.chart('chart-humidity', {
+            ...chartOptions,
+            title: {
+                text: 'Umidità (%)',
+            },
+            yAxis: {
+                gridLineWidth: 1,
+                showEmpty: true,
+                tickInterval: 5,
+                minPadding: 0,
+                maxPadding: 0,
+                /*labels: {
+                    format: '{value}%'
+                },*/
+                title: false,
+            },
+            tooltip: {
+                enabled: true,
+                valueSuffix: '%',
+                shared: true,
+                valueDecimals: 0,
+            },
+            series: [{
+                name: 'Umidità',
+                data: seriesHum,
+            }],
+        });
+    },
+
     updateCondition: function () {
         // TODO infer a flight condition from weather and metar data
         document.querySelector('#condition-msg').innerHTML =
             '<i class="fa-solid fa-circle-check"></i> Condizioni ideali';
-    }
+    },
 };
 
 const localDateTime = () => {

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather station test</title>
+    <!-- TODO remove this stylesheet and use JS load only + preload CSS -->
     <link rel="stylesheet" href="./styles.scss">
     <script type="module" src="./scripts.js"></script>
 </head>
@@ -172,6 +173,43 @@
                                 <i class="fa-solid fa-moon"></i>
                                 <h3>Tramonto</h3>
                                 <h2 id="sunset-time">--:--</h2>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row d-flex">
+        <div class="historical-charts col mx-lg-4 mt-4">
+            <div class="container flex-md-row flex-column my-4">
+                <div class="row">
+                    <section class="history-temperature col-lg-6">
+                        <div class="chart-temperature card">
+                            <div class="card-body">
+                                <div id="chart-temperature"></div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="history-humidity col-lg-6">
+                        <div class="chart-humidity card">
+                            <div class="card-body">
+                                <div id="chart-humidity"></div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="history-pressure col-lg-6">
+                        <div class="chart-pressure card">
+                            <div class="card-body">
+                                Grafico con dati storici non ancora implementato.
+                            </div>
+                        </div>
+                    </section>
+                    <section class="history-wind-speed col-lg-6">
+                        <div class="chart-wind-speed card">
+                            <div class="card-body">
+                                Grafico con dati storici non ancora implementato.
                             </div>
                         </div>
                     </section>
