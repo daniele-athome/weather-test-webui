@@ -14,6 +14,10 @@ const getWeatherIcon = (name) => {
     return weatherIcons[`./images/weather-icons/${name}.svg`]?.default;
 }
 
+const milesToKilometers = (miles) => {
+    return Math.round(miles * 1.609344);
+}
+
 const themeManager = {
     body: document.querySelector('body'),
     themeToggle: document.querySelector('#flexSwitchCheckChecked'),
@@ -182,6 +186,10 @@ const weatherManager = {
                 if (data.cover === 'CAVOK') {
                     // special condition that includes visibility of 10+ km
                     document.querySelector('#visibility').innerHTML = '10';
+                }
+                else if (data.hasOwnProperty('visib')) {
+                    document.querySelector('#visibility').innerHTML =
+                        milesToKilometers(parseInt(data.visib)).toString();
                 }
             }
         });
