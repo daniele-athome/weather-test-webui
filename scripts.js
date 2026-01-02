@@ -24,6 +24,74 @@ const milesToKilometers = (miles) => {
     return Math.round(miles * 1.609344);
 }
 
+// Sonnet 4.5 wrote this :)
+const windGradientColor = (value) => {
+    value = Math.max(0, value);
+
+    // TODO this is for kph, but wind speed unit is m/s now
+    const stops = [
+        { value: 0, color: { r: 0, g: 255, b: 0 } },      // green
+        { value: 12, color: { r: 255, g: 255, b: 0 } },   // yellow
+        { value: 18, color: { r: 255, g: 165, b: 0 } },   // orange
+        { value: 25, color: { r: 255, g: 0, b: 0 } }      // red
+    ];
+    // last stop
+    if (value >= stops[stops.length - 1].value) {
+        const red = stops[stops.length - 1].color;
+        return `rgb(${red.r}, ${red.g}, ${red.b})`;
+    }
+
+    let lowerStop, upperStop;
+    for (let i = 0; i < stops.length - 1; i++) {
+        if (value >= stops[i].value && value <= stops[i + 1].value) {
+            lowerStop = stops[i];
+            upperStop = stops[i + 1];
+            break;
+        }
+    }
+
+    const range = upperStop.value - lowerStop.value;
+    const valueInRange = value - lowerStop.value;
+    const percentage = valueInRange / range;
+
+    const r = Math.round(lowerStop.color.r + (upperStop.color.r - lowerStop.color.r) * percentage);
+    const g = Math.round(lowerStop.color.g + (upperStop.color.g - lowerStop.color.g) * percentage);
+    const b = Math.round(lowerStop.color.b + (upperStop.color.b - lowerStop.color.b) * percentage);
+
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
+const registerArrowMarker = () => {
+    Highcharts.SVGRenderer.prototype.symbols.arrowUp = function(x, y, w, h) {
+        // scaling from (viewBox 0 0 640 640)
+        const scaleX = w / 640;
+        const scaleY = h / 640;
+
+        // Funzione helper per scalare le coordinate
+        const scale = (coords) => coords.map((val, i) =>
+            i % 2 === 0 ? x + val * scaleX : y + val * scaleY
+        );
+
+        return [
+            'M', ...scale([342.6, 81.4]),
+            'C', ...scale([330.1, 68.9, 309.8, 68.9, 297.3, 81.4]),
+            'L', ...scale([137.3, 241.4]),
+            'C', ...scale([124.8, 253.9, 124.8, 274.2, 137.3, 286.7]),
+            'C', ...scale([149.8, 299.2, 170.1, 299.2, 182.6, 286.7]),
+            'L', ...scale([288, 181.3]),
+            'L', ...scale([288, 552]),
+            'C', ...scale([288, 569.7, 302.3, 584, 320, 584]),
+            'C', ...scale([337.7, 584, 352, 569.7, 352, 552]),
+            'L', ...scale([352, 181.3]),
+            'L', ...scale([457.4, 286.7]),
+            'C', ...scale([469.9, 299.2, 490.2, 299.2, 502.7, 286.7]),
+            'C', ...scale([515.2, 274.2, 515.2, 253.9, 502.7, 241.4]),
+            'L', ...scale([342.7, 81.4]),
+            'z'
+        ];
+    };
+}
+
 const themeManager = {
     body: document.querySelector('body'),
     themeToggle: document.querySelector('#flexSwitchCheckChecked'),
@@ -154,7 +222,7 @@ const weatherManager = {
             document.querySelector('#humidity').innerHTML = this.roundHumidity(latest['humidity']).toString();
             document.querySelector('#dew-point').innerHTML = this.roundTemperature(latest['dew_point']).toString();
             document.querySelector('#presure').innerHTML = this.roundPressure(latest['pressure']).toString();
-            document.querySelector('#wind-speed').innerHTML = latest['wind_speed'].toFixed(0);
+            document.querySelector('#wind-speed').innerHTML = this.roundWindSpeed(latest['wind_speed']).toString();
             document.querySelector('#wind-direction').innerHTML = latest['wind_direction'];
 
             const config = {
@@ -209,20 +277,37 @@ const weatherManager = {
         let seriesDewpoint = [];
         let seriesHumidity = [];
         let seriesPressure = [];
+        let seriesWind = [];
         for (let item of data) {
+            // TEST item['wind_speed'] += Math.random() * 30;
+
             seriesTemperature.push([item['timestamp'], this.roundTemperature(item['temperature'])]);
             seriesDewpoint.push([item['timestamp'], this.roundTemperature(item['dew_point'])]);
             seriesHumidity.push([item['timestamp'], this.roundHumidity(item['humidity'])]);
             seriesPressure.push([item['timestamp'], this.roundPressure(item['pressure'])]);
+
+            let windGradient = windGradientColor(item['wind_speed']);
+            seriesWind.push({
+                x: item['timestamp'],
+                y: this.roundWindSpeed(item['wind_speed']),
+                direction: item['wind_direction'],
+                marker: {
+                    fillColor: windGradient,
+                    lineColor: windGradient,
+                    direction: item['wind_direction'],
+                },
+            });
         }
         seriesTemperature.sort((a, b) => a[0].localeCompare(b[0]));
         seriesDewpoint.sort((a, b) => a[0].localeCompare(b[0]));
         seriesHumidity.sort((a, b) => a[0].localeCompare(b[0]));
         seriesPressure.sort((a, b) => a[0].localeCompare(b[0]));
-        console.log(seriesTemperature);
-        console.log(seriesDewpoint);
-        console.log(seriesHumidity);
-        console.log(seriesPressure);
+        seriesWind.sort((a, b) => a.x.localeCompare(b.x));
+        // console.log(seriesTemperature);
+        // console.log(seriesDewpoint);
+        // console.log(seriesHumidity);
+        // console.log(seriesPressure);
+        // console.log(seriesWind);
 
         const chartOptions = {
             chart: {
@@ -375,6 +460,70 @@ const weatherManager = {
                 data: seriesPressure,
             }],
         });
+
+        Highcharts.chart('chart-wind', {
+            ...chartOptions,
+            chart: {
+                type: 'scatter',
+                height: 250,
+                zooming: {
+                    type: 'x'
+                },
+            },
+            title: {
+                text: 'Vento (m/s)',
+            },
+            yAxis: {
+                gridLineWidth: 1,
+                showEmpty: true,
+                tickInterval: 5,
+                minPadding: 0,
+                maxPadding: 0,
+                title: false,
+            },
+            tooltip: {
+                enabled: true,
+                valueSuffix: ' m/s',
+                shared: true,
+                valueDecimals: 0,
+                formatter: function() {
+                    return '<b>' + Highcharts.dateFormat('%e %b %H:%M', this.x) + '</b><br/>' +
+                        'Velocità: ' + this.y.toFixed(1) + ' m/s<br/>' +
+                        'Direzione: ' + this.point.direction + '°';
+                }
+            },
+            series: [{
+                name: 'Vento',
+                marker: {
+                    enabled: true,
+                    enabledThreshold: 50,
+                    symbol: 'arrowUp',
+                    radius: 10,
+                },
+                dataGrouping: {
+                    enabled: true,
+                    groupPixelWidth: 30,
+                },
+                data: seriesWind,
+            }],
+        }, function(chart) {
+            chart.series[0].points.forEach(function(point) {
+                if (point.graphic) {
+                    const rotation = point.direction;
+
+                    // this code works only for image markers:
+                    // https://github.com/highcharts/highcharts/issues/12219#issuecomment-543092054
+                    // for a path we need to use the bounding box method
+
+                    const graphic = point.graphic.element;
+                    const bbox = graphic.getBBox();
+                    const centerX = bbox.x + bbox.width / 2;
+                    const centerY = bbox.y + bbox.height / 2;
+
+                    graphic.setAttribute('transform', `rotate(${rotation}, ${centerX}, ${centerY})`);
+                }
+            });
+        });
     },
 
     updateCondition: function () {
@@ -394,6 +543,10 @@ const weatherManager = {
     roundPressure: function(humidity) {
         return parseFloat(humidity.toFixed(0));
     },
+
+    roundWindSpeed: function(humidity) {
+        return parseFloat(humidity.toFixed(0));
+    },
 };
 
 const localDateTime = () => {
@@ -402,6 +555,8 @@ const localDateTime = () => {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    registerArrowMarker();
+
     themeManager.initialize();
     sunTimesManager.initialize();
     weatherManager.initialize();
