@@ -202,7 +202,8 @@ const weatherManager = {
 
     createHistoricalCharts: function(data) {
         const randomOffset = () => {
-            return Math.round((Math.random() * 10 - 5) * 10) / 10
+            // TEST return Math.round((Math.random() * 10 - 5) * 10) / 10
+            return 0;
         };
 
         let seriesTemp = [];
