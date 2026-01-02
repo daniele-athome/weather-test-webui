@@ -10,7 +10,6 @@ import nightLandscapeImage from './images/night-landscape.png';
 
 const weatherIcons = import.meta.glob('./images/weather-icons/*.svg', { eager: true });
 const getWeatherIcon = (name) => {
-    console.log(weatherIcons);
     return weatherIcons[`./images/weather-icons/${name}.svg`]?.default;
 }
 
@@ -177,7 +176,6 @@ const weatherManager = {
                 }
 
                 const cloudIcon = this.cloudCoverageIcon[cloudCoverage];
-                console.log(cloudIcon);
                 if (cloudIcon !== undefined) {
                     const realCloudIcon = sunTimesManager.isNight() ? cloudIcon.night : cloudIcon.day;
                     document.querySelector('#condition-icon').src = getWeatherIcon(realCloudIcon);
@@ -202,7 +200,7 @@ const weatherManager = {
     }
 };
 
-function localDateTime() {
+const localDateTime = () => {
     // TODO we should location timezone instead of the browser one
     return new Date();
 }
