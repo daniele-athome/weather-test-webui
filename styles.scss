@@ -264,3 +264,10 @@ footer i {
     color: rgb(246, 255, 250);
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.35);
 }
+
+// TODO vertical padding is actually margin created by "my-N" classes
+@media only screen and (max-width: 576px) {
+    .row > section {
+        --bs-gutter-x: 0;
+    }
+}
