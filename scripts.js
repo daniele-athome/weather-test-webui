@@ -7,6 +7,8 @@ import Feels from 'feels';
 import * as Highcharts from 'highcharts';
 // noinspection ES6UnusedImports
 import * as HighchartsAdaptive from 'highcharts/themes/adaptive';
+// noinspection ES6UnusedImports
+import * as HighchartsBrokenAxis from 'highcharts/modules/broken-axis';
 
 import dayLandscapeImage from './images/day-landscape.png';
 import nightLandscapeImage from './images/night-landscape.png';
@@ -146,10 +148,10 @@ const weatherManager = {
                 second: '2-digit',
                 timeZoneName: 'longOffset',
             });
-            document.querySelector('#temp-now').innerHTML = latest['temperature'].toFixed(1);
-            document.querySelector('#humidity').innerHTML = latest['humidity'].toFixed(0);
-            document.querySelector('#dew-point').innerHTML = latest['dew_point'].toFixed(1);
-            document.querySelector('#presure').innerHTML = latest['pressure'].toFixed(0);
+            document.querySelector('#temp-now').innerHTML = this.roundTemperature(latest['temperature']).toString();
+            document.querySelector('#humidity').innerHTML = this.roundHumidity(latest['humidity']).toString();
+            document.querySelector('#dew-point').innerHTML = this.roundTemperature(latest['dew_point']).toString();
+            document.querySelector('#presure').innerHTML = this.roundPressure(latest['pressure']).toString();
             document.querySelector('#wind-speed').innerHTML = latest['wind_speed'].toFixed(0);
             document.querySelector('#wind-direction').innerHTML = latest['wind_direction'];
 
@@ -201,30 +203,28 @@ const weatherManager = {
     },
 
     createHistoricalCharts: function(data) {
-        const randomOffset = () => {
-            // TEST return Math.round((Math.random() * 10 - 5) * 10) / 10
-            return 0;
-        };
-
-        let seriesTemp = [];
-        let seriesDew = [];
-        let seriesHum = [];
+        let seriesTemperature = [];
+        let seriesDewpoint = [];
+        let seriesHumidity = [];
+        let seriesPressure = [];
         for (let item of data) {
-            let offset = randomOffset();
-            seriesTemp.push([item['timestamp'], item['temperature'] + offset]);
-            seriesDew.push([item['timestamp'], item['dew_point'] + offset]);
-            seriesHum.push([item['timestamp'], item['humidity'] + offset]);
+            seriesTemperature.push([item['timestamp'], this.roundTemperature(item['temperature'])]);
+            seriesDewpoint.push([item['timestamp'], this.roundTemperature(item['dew_point'])]);
+            seriesHumidity.push([item['timestamp'], this.roundHumidity(item['humidity'])]);
+            seriesPressure.push([item['timestamp'], this.roundPressure(item['pressure'])]);
         }
-        seriesTemp.sort((a, b) => a[0].localeCompare(b[0]));
-        seriesDew.sort((a, b) => a[0].localeCompare(b[0]));
-        seriesHum.sort((a, b) => a[0].localeCompare(b[0]));
-        console.log(seriesTemp);
-        console.log(seriesDew);
-        console.log(seriesHum);
+        seriesTemperature.sort((a, b) => a[0].localeCompare(b[0]));
+        seriesDewpoint.sort((a, b) => a[0].localeCompare(b[0]));
+        seriesHumidity.sort((a, b) => a[0].localeCompare(b[0]));
+        seriesPressure.sort((a, b) => a[0].localeCompare(b[0]));
+        console.log(seriesTemperature);
+        console.log(seriesDewpoint);
+        console.log(seriesHumidity);
+        console.log(seriesPressure);
 
         const chartOptions = {
             chart: {
-                type: 'line',
+                type: 'spline',
                 height: 250,
                 zooming: {
                     type: 'x'
@@ -252,11 +252,20 @@ const weatherManager = {
                 title: false,
             },
             plotOptions: {
+                spline: {
+                    marker: {
+                        enabled: false,
+                        radius: 4,
+                        //lineColor: '#666666',
+                        lineWidth: 1
+                    },
+                    gapSize: 100,
+                    gapUnit: 'relative',
+                },
                 series: {
                     label: {
                         connectorAllowed: false
                     },
-                    //pointStart: 2010
                 }
             },
             credits: {
@@ -288,18 +297,21 @@ const weatherManager = {
                 tickInterval: 5,
                 minPadding: 0,
                 maxPadding: 0,
-                /*labels: {
-                    format: '{value} °C'
-                },*/
                 title: false,
             },
             series: [{
                 name: 'Temperatura',
-                data: seriesTemp,
+                marker: {
+                    symbol: 'circle'
+                },
+                data: seriesTemperature,
                 color: '#2d87ff',
             }, {
                 name: 'Punto di rugiada',
-                data: seriesDew,
+                marker: {
+                    symbol: 'circle'
+                },
+                data: seriesDewpoint,
                 color: '#f53e3e',
             }],
         });
@@ -315,9 +327,6 @@ const weatherManager = {
                 tickInterval: 5,
                 minPadding: 0,
                 maxPadding: 0,
-                /*labels: {
-                    format: '{value}%'
-                },*/
                 title: false,
             },
             tooltip: {
@@ -328,7 +337,38 @@ const weatherManager = {
             },
             series: [{
                 name: 'Umidità',
-                data: seriesHum,
+                marker: {
+                    symbol: 'circle'
+                },
+                data: seriesHumidity,
+            }],
+        });
+
+        Highcharts.chart('chart-pressure', {
+            ...chartOptions,
+            title: {
+                text: 'Pressione (mbar)',
+            },
+            yAxis: {
+                gridLineWidth: 1,
+                showEmpty: true,
+                tickInterval: 5,
+                minPadding: 0,
+                maxPadding: 0,
+                title: false,
+            },
+            tooltip: {
+                enabled: true,
+                valueSuffix: ' mbar',
+                shared: true,
+                valueDecimals: 0,
+            },
+            series: [{
+                name: 'Pressione',
+                marker: {
+                    symbol: 'circle'
+                },
+                data: seriesPressure,
             }],
         });
     },
@@ -337,6 +377,18 @@ const weatherManager = {
         // TODO infer a flight condition from weather and metar data
         document.querySelector('#condition-msg').innerHTML =
             '<i class="fa-solid fa-circle-check"></i> Condizioni ideali';
+    },
+
+    roundTemperature: function(temperature) {
+        return parseFloat(temperature.toFixed(1));
+    },
+
+    roundHumidity: function(humidity) {
+        return parseFloat(humidity.toFixed(0));
+    },
+
+    roundPressure: function(humidity) {
+        return parseFloat(humidity.toFixed(0));
     },
 };
 
