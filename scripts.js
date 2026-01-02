@@ -559,10 +559,16 @@ const webcamManager = {
             this.fullscreenImage.src = this.localImage.src;
             this.overlay.classList.add('active');
             await this.overlay.requestFullscreen();
+            if (screen.orientation && screen.orientation.lock) {
+                await screen.orientation.lock('landscape');
+            }
         });
         this.fullscreenImage.addEventListener('click', async () => {
             this.overlay.classList.remove('active');
             await document.exitFullscreen();
+            if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock();
+            }
         });
     },
 };
