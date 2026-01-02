@@ -95,7 +95,7 @@ const sunTimesManager = {
 };
 
 const weatherManager = {
-    weatherUrl: import.meta.env.VITE_WEATHER_API_URL + "/latest?limit=50",
+    weatherUrl: import.meta.env.VITE_WEATHER_API_URL + "/latest?limit=1440",
     metarUrl: import.meta.env.VITE_WEATHER_API_URL + "/metar",
     cloudCover: {
         'CAVOK': 0,
